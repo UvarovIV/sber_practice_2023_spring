@@ -6,6 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="spring_context_2_component" />
+        <module name="spring_context_1_bean" />
         <module name="first_project" />
       </profile>
     </annotationProcessing>
