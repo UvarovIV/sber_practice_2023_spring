@@ -1,7 +1,6 @@
 package ru.sber.repositories;
 
 import ru.sber.models.Client;
-
 import java.math.BigDecimal;
 
 public interface TransfersRepository {

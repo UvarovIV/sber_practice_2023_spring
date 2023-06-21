@@ -48,4 +48,11 @@ public class Client {
         this.phone = phone;
     }
 
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
 }

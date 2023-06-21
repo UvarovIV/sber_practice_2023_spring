@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class BankClientsProxy {
 
-    List<Client> clients;
+    private List<Client> clients;
 
     public BankClientsProxy() {
         clients = List.of(

@@ -13,6 +13,4 @@ public class DBTransfersRepository implements TransfersRepository {
         System.out.printf("Добавление записи в БД. Перевод выполнен. Получатель: %s %s %s. Сумма %s руб. %n", client.getSurname(), client.getName(), client.getPatronymic(), sum);
     }
 
-
-
 }

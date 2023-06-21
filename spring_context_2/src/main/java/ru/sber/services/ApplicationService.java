@@ -6,14 +6,13 @@ import ru.sber.models.Client;
 import ru.sber.proxies.BankClientsProxy;
 import ru.sber.proxies.TransferByPhoneProxy;
 import ru.sber.repositories.TransfersRepository;
-
 import java.math.BigDecimal;
 
 @Component
 public class ApplicationService {
-    private BankClientsProxy bankClientsProxy;
-    private TransferByPhoneProxy transferByPhoneProxy;
-    private TransfersRepository transfersRepository;
+    private final BankClientsProxy bankClientsProxy;
+    private final TransferByPhoneProxy transferByPhoneProxy;
+    private final TransfersRepository transfersRepository;
 
     @Autowired
     public ApplicationService(BankClientsProxy bankClientsProxy, TransferByPhoneProxy transferByPhoneProxy, TransfersRepository transfersRepository) {

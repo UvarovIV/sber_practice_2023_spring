@@ -9,9 +9,7 @@ import java.math.BigDecimal;
 public class TransferByPhoneProxy {
 
     public void transfer(Client client, BigDecimal sum) {
-        System.out.printf("Перевод клиенту: %s %s на сумму %s выполнен %n", client.getSurname(), client.getName(), sum);
+        System.out.printf("Перевод клиенту: %s %s на сумму %s руб. выполнен %n", client.getSurname(), client.getName(), sum);
     }
-
-
 
 }
