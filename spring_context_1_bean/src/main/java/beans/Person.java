@@ -1,10 +1,10 @@
 package beans;
 
 public class Person {
-    String name;
-    Parrot firstParrot, secondParrot;
-    Dog dog;
-    Cat cat;
+    private String name;
+    private Parrot firstParrot, secondParrot;
+    private Dog dog;
+    private Cat cat;
 
     public String getName() {
         return name;

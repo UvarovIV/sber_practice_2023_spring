@@ -7,10 +7,10 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class Person {
-    String name;
-    Parrot firstParrot, secondParrot;
-    Dog dog;
-    Cat cat;
+    private String name;
+    private Parrot firstParrot, secondParrot;
+    private Dog dog;
+    private Cat cat;
 
     @Autowired
     public Person(Parrot firstParrot, Parrot secondParrot, Dog dog, Cat cat) {
