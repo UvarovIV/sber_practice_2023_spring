@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.sber.models.Client;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BankClientsProxy {
@@ -19,15 +20,15 @@ public class BankClientsProxy {
         );
     }
 
-    public Client checkClient(String phone) {
+    public Optional<Client> checkClient(String phone) {
 
-        for (Client c: clients) {
-            if (phone.equals(c.getPhone())) {
-                return c;
+        for (Client cl: clients) {
+            if (phone.equals(cl.getPhone())) {
+                return Optional.of(cl);
             }
         }
 
-        return null;
+        return Optional.empty();
 
     }
 

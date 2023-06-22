@@ -7,6 +7,7 @@ import ru.sber.proxies.BankClientsProxy;
 import ru.sber.proxies.TransferByPhoneProxy;
 import ru.sber.repositories.TransfersRepository;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Component
 public class ApplicationService {
@@ -22,11 +23,11 @@ public class ApplicationService {
     }
 
     public void transfer(String phone, BigDecimal sum) {
-        Client client = bankClientsProxy.checkClient(phone);
-        if (client != null) {
+        Optional<Client> client = bankClientsProxy.checkClient(phone);
+        if (client.isPresent()) {
             System.out.println("Перевод возможен");
-            transferByPhoneProxy.transfer(client, sum);
-            transfersRepository.addRecordToDB(client, sum);
+            transferByPhoneProxy.transfer(client.get(), sum);
+            transfersRepository.addRecordToDB(client.get(), sum);
         } else {
             System.out.println("Этот человек не является клиентом");
         }
