@@ -1,5 +1,8 @@
 package ru.sber.models;
 
+/**
+ * Класс описывающий книгу
+ */
 public class Book {
 
     private String title;

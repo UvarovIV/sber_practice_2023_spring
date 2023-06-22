@@ -14,6 +14,9 @@ import java.util.logging.Logger;
 public class NotEmptyAspect {
     private Logger logger = Logger.getLogger(NotEmptyAspect.class.getName());
 
+    /**
+     * Аспект для проверки аргументов методов на NULL и пустые значения
+     */
     @Before("@annotation(NotEmpty) && (args(java.util.Collection<?>,..) || args(String,..))" )
     public void checkArguments(JoinPoint joinPoint) throws Throwable {
 
