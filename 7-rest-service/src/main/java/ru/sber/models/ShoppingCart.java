@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Корзина с покупками
+ */
 @Data
 @AllArgsConstructor
 public class ShoppingCart {

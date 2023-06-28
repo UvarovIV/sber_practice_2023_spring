@@ -3,6 +3,9 @@ package ru.sber.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * Пользователь
+ */
 @Data
 @AllArgsConstructor
 public class User {

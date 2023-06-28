@@ -5,9 +5,12 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+/**
+ * Информация о платеже
+ */
 @Data
 @AllArgsConstructor
 public class Payment {
     BigDecimal sum;
-    long idUser;
+    long userId;
 }

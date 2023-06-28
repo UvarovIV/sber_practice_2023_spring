@@ -38,7 +38,7 @@ public interface ShoppingCartRepository {
      * @param amount Новое количество товара
      * @return Возвращает корзину с внесенными изменениями
      */
-    Optional<ShoppingCart> updateAmountProduct(long idCart, long idProduct, int amount);
+    List<Optional<?>> updateProductAmount(long idCart, long idProduct, int amount);
 
     /**
      * Удаляет товар из корзины

@@ -23,8 +23,10 @@ public class LocalUserRepository implements UserRepository {
                 new User(1, "NekoBro", "NBro1111", "123456",
                         "pppsasqwas@gmail.com", shoppingCartRepository.createShoppingCart()),
                 new User(2, "dkdkdkdkd", "WhoAmI", "654321",
-                "pppsasqwas@gmail.com", shoppingCartRepository.createShoppingCart())
+                        "pppsasqwas@gmail.com", shoppingCartRepository.createShoppingCart())
         ));
+        users.get(0).getCart().setId(1L);
+        users.get(1).getCart().setId(2L);
     }
 
     @Override

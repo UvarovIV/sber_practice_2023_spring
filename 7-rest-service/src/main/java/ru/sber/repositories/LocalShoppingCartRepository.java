@@ -33,7 +33,7 @@ public class LocalShoppingCartRepository implements ShoppingCartRepository {
     @Override
     public Optional<ShoppingCart> findById(long id) {
         return shoppingCarts.stream()
-                .filter(product -> product.getId() == id)
+                .filter(cart -> cart.getId() == id)
                 .findAny();
     }
 
@@ -51,27 +51,37 @@ public class LocalShoppingCartRepository implements ShoppingCartRepository {
     }
 
     @Override
-    public Optional<ShoppingCart> updateAmountProduct(long idCart, long idProduct,int amount) {
-        Optional<ShoppingCart> cart = shoppingCarts.stream().filter(c -> c.getId()==idCart).findAny();
-        if(cart.isPresent()){
-            Optional<Product> product = cart.get()
-                    .getProductsList()
-                    .stream()
-                    .filter(p->p.getId()==idProduct)
-                    .findAny();
-            if(product.isPresent()){
+    public List<Optional<?>> updateProductAmount(long idCart, long idProduct, int amount) {
+
+        Optional<ShoppingCart> cart = findById(idCart);
+        Optional<Product> product = Optional.empty();
+
+        if (cart.isPresent()) {
+
+            List<Product> products = cart.get().getProductsList();
+
+            product = products.stream().filter(p -> p.getId() == idProduct).findAny();
+
+            if (product.isPresent()) {
                 product.get().setAmount(amount);
             }
         }
-        return cart;
+
+        return List.of(cart, product);
     }
 
     @Override
     public boolean deleteProduct(long idCart, long idProduct) {
-        Optional<ShoppingCart> cart = shoppingCarts.stream().filter(c -> c.getId()==idCart).findAny();
-        if(cart.isPresent()){
-            return cart.get().getProductsList().removeIf(product -> product.getId() == idProduct);
+
+        Optional<ShoppingCart> cart = findById(idCart);
+
+        if (cart.isPresent()) {
+
+            List<Product> products = cart.get().getProductsList();
+            return products.removeIf(product -> product.getId() == idProduct);
+
         }
+
         return false;
     }
 
@@ -81,4 +91,6 @@ public class LocalShoppingCartRepository implements ShoppingCartRepository {
         int high = 1_000_000;
         return random.nextLong(high - low) + low;
     }
+
+
 }

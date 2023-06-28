@@ -20,12 +20,22 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Регистрирует нового пользователя
+     * @param user Пользователь
+     * @return Возвращает идентификатор зарегистрированного пользователя
+     */
     @PostMapping
     public long signUp(@RequestBody User user) {
         log.info("Регистрация пользователя {}", user);
         return userRepository.signUp(user);
     }
 
+    /**
+     * Находит пользователя по идентификатору
+     * @param id Уникальный идентификатор пользователя
+     * @return Возвращает пользователя с ограниченным количеством полей
+     */
     @GetMapping("/{id}")
     public ResponseEntity<AbridgedUser> getUserById(@PathVariable long id) {
 
@@ -40,6 +50,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Удаляет пользователя по идентификатору
+     * @param id Уникальный идентификатор пользователя
+     * @return Возвращает статус выполнения
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
 

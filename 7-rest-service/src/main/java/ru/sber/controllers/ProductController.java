@@ -22,20 +22,21 @@ public class ProductController {
 
     @PostMapping
     public long addProduct(@RequestBody Product product) {
-        log.info("Добавление продукта {}", product);
+        log.info("Добавление товара {}", product);
 
         return productRepository.save(product);
     }
 
     @GetMapping
     public List<Product> getProducts(@RequestParam(required = false) String name) {
-        log.info("Поиск продуктов по имени {}", name);
+        log.info("Поиск товаров по имени {}", name);
 
         return productRepository.findAll(name);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProducts(@PathVariable long id) {
+        log.info("Получение товара по id");
         Optional<Product> product = productRepository.findById(id);
 
         if (product.isPresent()) {
@@ -47,6 +48,7 @@ public class ProductController {
 
     @PutMapping
     public Product updateProduct(@RequestBody Product product) {
+        log.info("Обновление информации о товаре");
         productRepository.update(product);
 
         return product;
@@ -54,6 +56,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable long id) {
+        log.info("Удаление продукта по id");
         boolean isDeleted = productRepository.deleteById(id);
 
         if (isDeleted) {

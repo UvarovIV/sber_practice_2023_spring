@@ -14,6 +14,9 @@ GET localhost:8080/users/1
 Content-Type: application/json
 
 ###
+DELETE localhost:8080/users/2
+
+###
 POST localhost:8080/products
 Content-Type: application/json
 
@@ -23,68 +26,59 @@ Content-Type: application/json
 }
 
 ###
-POST localhost:8080/products
+PUT localhost:8080/products
 Content-Type: application/json
 
 {
-  "name": "Яблоко",
-  "price": 70
+  "id": 1,
+  "name": "Банан",
+  "price": 80,
+  "amount": 1
 }
+
+###
+DELETE localhost:8080/products/3
+
+###
+GET localhost:8080/products/1
 
 ###
 GET localhost:8080/products?name=Морковь
 Content-Type: application/json
 
 ###
-GET localhost:8080/products/1
+GET localhost:8080/products
+Content-Type: application/json
 
 ###
-PUT localhost:8080/products
+POST localhost:8080/cart/1/product/2
+Content-Type: application/json
+
+###
+POST localhost:8080/cart/1/product/1
+Content-Type: application/json
+
+###
+PUT localhost:8080/cart/1/product/2
 Content-Type: application/json
 
 {
-  "id": 448926,
-  "name": "Банан",
-  "price": 80
+  "amount": 4
 }
 
 ###
-DELETE localhost:8080/products/987282
+DELETE localhost:8080/cart/1/product/1
 
 ###
-POST localhost:8080/cart/912623
+GET localhost:8080/users/1
 Content-Type: application/json
-
-{
-  "idCart": 2
-}
-
-###
-POST localhost:8080/cart/912623
-Content-Type: application/json
-
-{
-  "id": 1,
-  "amount": 1
-}
-
-###
-PUT localhost:8080/cart/912623/product/1
-Content-Type: application/json
-
-{
-  "amount": 3
-}
-
-###
-DELETE localhost:8080/cart/454547/products/2
 
 ###
 POST localhost:8080/payment
 Content-Type: application/json
 
 {
-  "sum": 666,
-  "idUser": 1
-
+  "sum": 800,
+  "userId": 1
 }
+

@@ -2,6 +2,9 @@ package ru.sber.models;
 
 import lombok.Data;
 
+/**
+ * Пользователь с ограниченным количеством полей
+ */
 @Data
 public class AbridgedUser {
     private long id;

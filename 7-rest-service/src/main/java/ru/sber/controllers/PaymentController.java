@@ -19,14 +19,21 @@ public class PaymentController {
         this.localPaymentService = localPaymentService;
     }
 
+    /**
+     * Совершает платеж
+     * @param payment Платеж
+     * @return Возвращает статус выполнения операции
+     */
     @PostMapping
     public ResponseEntity<?> pay(@RequestBody Payment payment) {
-        log.info("Совершение платежа {}", payment);
+
         boolean isPay = localPaymentService.pay(payment);
+
         if (isPay) {
             return ResponseEntity.accepted().build();
         } else {
             return ResponseEntity.badRequest().build();
         }
+
     }
 }
