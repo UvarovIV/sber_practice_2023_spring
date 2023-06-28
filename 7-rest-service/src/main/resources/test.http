@@ -1,0 +1,26 @@
+###
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Игорь",
+  "login": "No211",
+  "password": "12345",
+  "email": "posssss@gmail.com"
+}
+
+###
+GET localhost:8080/users/1
+Content-Type: application/json
+
+###
+POST localhost:8080/cart/394192/product/2
+Content-Type: application/json
+
+###
+POST localhost:8080/cart/394192/product/5
+Content-Type: application/json
+
+###
+POST localhost:8080/cart/13605/product/2
+Content-Type: application/json

@@ -1,0 +1,90 @@
+###
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Игорь",
+  "login": "No211",
+  "password": "12345",
+  "email": "posssss@gmail.com"
+}
+
+###
+GET localhost:8080/users/1
+Content-Type: application/json
+
+###
+POST localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "Морковь",
+  "price": 70
+}
+
+###
+POST localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "Яблоко",
+  "price": 70
+}
+
+###
+GET localhost:8080/products?name=Морковь
+Content-Type: application/json
+
+###
+GET localhost:8080/products/1
+
+###
+PUT localhost:8080/products
+Content-Type: application/json
+
+{
+  "id": 448926,
+  "name": "Банан",
+  "price": 80
+}
+
+###
+DELETE localhost:8080/products/987282
+
+###
+POST localhost:8080/cart/912623
+Content-Type: application/json
+
+{
+  "idCart": 2
+}
+
+###
+POST localhost:8080/cart/912623
+Content-Type: application/json
+
+{
+  "id": 1,
+  "amount": 1
+}
+
+###
+PUT localhost:8080/cart/912623/product/1
+Content-Type: application/json
+
+{
+  "amount": 3
+}
+
+###
+DELETE localhost:8080/cart/454547/products/2
+
+###
+POST localhost:8080/payment
+Content-Type: application/json
+
+{
+  "sum": 666,
+  "idUser": 1
+
+}
