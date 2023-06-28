@@ -31,20 +31,16 @@ public class ShoppingCartController {
      * @return Возвращает корзину с внесенными изменениями
      */
     @PostMapping("/{idCart}/product/{idProduct}")
-    public ResponseEntity<ShoppingCart> addProduct(@PathVariable long idCart, @PathVariable Long idProduct) {
+    public ResponseEntity<ShoppingCart> addProductToCart(@PathVariable long idCart, @PathVariable Long idProduct) {
 
         log.info("Добавление в корзину товара с id: {}", idProduct);
 
-        List<Optional<?>> optionalList = shoppingCartRepository.addToCart(idCart, idProduct);
+        Optional<ShoppingCart> cart = shoppingCartRepository.addToCart(idCart, idProduct);
 
-        if (checkCartAndProductIsPresent(optionalList)) {
-
-            ShoppingCart cart = (ShoppingCart) optionalList.get(0).get();
-
-            return ResponseEntity.ok().body(cart);
-
-        } else {
+        if (cart.isEmpty()) {
             return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(cart.get());
         }
 
     }
@@ -57,20 +53,16 @@ public class ShoppingCartController {
      * @return Возвращает корзину с внесенными изменениями
      */
     @PutMapping("/{idCart}/product/{idProduct}")
-    public ResponseEntity<ShoppingCart> updateAmount(@PathVariable long idCart, @PathVariable long idProduct, @RequestBody Product product) {
+    public ResponseEntity<ShoppingCart> updateProductAmountInCart(@PathVariable long idCart, @PathVariable long idProduct, @RequestBody Product product) {
 
         log.info("Изменение количества товара в корзине");
 
-        List<Optional<?>> optionalList = shoppingCartRepository.updateProductAmount(idCart, idProduct, product.getAmount());
+        Optional<ShoppingCart> cart = shoppingCartRepository.updateProductAmount(idCart, idProduct, product.getAmount());
 
-        if (checkCartAndProductIsPresent(optionalList)) {
-
-            ShoppingCart cart = (ShoppingCart) optionalList.get(0).get();
-
-            return ResponseEntity.ok().body(cart);
-
-        } else {
+        if (cart.isEmpty()) {
             return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(cart.get());
         }
     }
 
@@ -94,16 +86,5 @@ public class ShoppingCartController {
         }
 
     }
-
-    private boolean checkCartAndProductIsPresent(List<Optional<?>> optionalList) {
-
-        boolean cartIsPresent = optionalList.get(0).isPresent();
-        boolean productIsPresent = optionalList.get(1).isPresent();
-
-        return cartIsPresent && productIsPresent;
-
-    }
-
-
 
 }

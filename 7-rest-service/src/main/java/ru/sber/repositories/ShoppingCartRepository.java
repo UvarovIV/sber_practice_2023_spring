@@ -25,11 +25,12 @@ public interface ShoppingCartRepository {
 
     /**
      * Добавляет товар в корзину
-     * @param idCart Уникальный идентификатор корзины
+     *
+     * @param idCart    Уникальный идентификатор корзины
      * @param idProduct Уникальный идентификатор продукта
      * @return Возвращает корзину с внесенными изменениями
      */
-    List<Optional<?>> addToCart(long idCart, long idProduct);
+    Optional<ShoppingCart> addToCart(long idCart, long idProduct);
 
     /**
      *
@@ -38,7 +39,7 @@ public interface ShoppingCartRepository {
      * @param amount Новое количество товара
      * @return Возвращает корзину с внесенными изменениями
      */
-    List<Optional<?>> updateProductAmount(long idCart, long idProduct, int amount);
+    Optional<ShoppingCart> updateProductAmount(long idCart, long idProduct, int amount);
 
     /**
      * Удаляет товар из корзины

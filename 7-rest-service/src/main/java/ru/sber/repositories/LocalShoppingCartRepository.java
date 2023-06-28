@@ -38,36 +38,39 @@ public class LocalShoppingCartRepository implements ShoppingCartRepository {
     }
 
     @Override
-    public List<Optional<?>> addToCart(long idCart, long idProduct) {
+    public Optional<ShoppingCart> addToCart(long idCart, long idProduct) {
 
         Optional<ShoppingCart> cart = findById(idCart);
         Optional<Product> product = productRepository.findById(idProduct);
 
         if (cart.isPresent() && product.isPresent()) {
             cart.get().getProductsList().add(product.get());
+            return cart;
         }
 
-        return List.of(cart, product);
+        return Optional.empty();
     }
 
     @Override
-    public List<Optional<?>> updateProductAmount(long idCart, long idProduct, int amount) {
+    public Optional<ShoppingCart> updateProductAmount(long idCart, long idProduct, int amount) {
 
         Optional<ShoppingCart> cart = findById(idCart);
-        Optional<Product> product = Optional.empty();
 
         if (cart.isPresent()) {
 
             List<Product> products = cart.get().getProductsList();
 
-            product = products.stream().filter(p -> p.getId() == idProduct).findAny();
+            Optional<Product> product = products.stream()
+                    .filter(p -> p.getId() == idProduct)
+                    .findAny();
 
             if (product.isPresent()) {
                 product.get().setAmount(amount);
+                return cart;
             }
         }
 
-        return List.of(cart, product);
+        return Optional.empty();
     }
 
     @Override
