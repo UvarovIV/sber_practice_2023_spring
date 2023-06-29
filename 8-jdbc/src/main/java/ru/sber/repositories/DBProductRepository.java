@@ -18,17 +18,21 @@ public class DBProductRepository implements ProductRepository {
     public static final String JDBC = "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=postgres";
 
     @Override
-    public long save(Product product) {
-        var insertSql = "INSERT INTO products_uvarov_iv.PRODUCT (name, price) VALUES (?,?);";
+    public long addNewProduct(Product product) {
+        var addNewProductSql = """
+                insert into products_uvarov_iv.product (name, price)
+                values (?,?);
+                """;
 
         try (var connection = DriverManager.getConnection(JDBC);
-             var prepareStatement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
-            prepareStatement.setString(1, product.getName());
-            prepareStatement.setDouble(2, product.getPrice().doubleValue());
+             var addNewProductPrepareStatement = connection.prepareStatement(addNewProductSql, Statement.RETURN_GENERATED_KEYS)) {
 
-            prepareStatement.executeUpdate();
+            addNewProductPrepareStatement.setString(1, product.getName());
+            addNewProductPrepareStatement.setDouble(2, product.getPrice().doubleValue());
 
-            ResultSet rs = prepareStatement.getGeneratedKeys();
+            addNewProductPrepareStatement.executeUpdate();
+
+            ResultSet rs = addNewProductPrepareStatement.getGeneratedKeys();
             if (rs.next()) {
                 return rs.getInt(1);
             } else {
@@ -41,13 +45,16 @@ public class DBProductRepository implements ProductRepository {
 
     @Override
     public Optional<Product> findById(long productId) {
-        var selectSql = "SELECT * FROM products_uvarov_iv.PRODUCT where id = ?";
+        var findProductByIdSql = """
+                select * from products_uvarov_iv.product
+                where id = ?;
+                """;
 
         try (var connection = DriverManager.getConnection(JDBC);
-             var prepareStatement = connection.prepareStatement(selectSql)) {
-            prepareStatement.setLong(1, productId);
+             var findProductByIdPrepareStatement = connection.prepareStatement(findProductByIdSql)) {
+            findProductByIdPrepareStatement.setLong(1, productId);
 
-            var resultSet = prepareStatement.executeQuery();
+            var resultSet = findProductByIdPrepareStatement.executeQuery();
 
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -59,6 +66,7 @@ public class DBProductRepository implements ProductRepository {
             }
 
             return Optional.empty();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -66,14 +74,17 @@ public class DBProductRepository implements ProductRepository {
 
     @Override
     public List<Product> findAll(String productName) {
-        var selectSql = "SELECT * FROM products_uvarov_iv.PRODUCT where name like ?";
+        var findAllSql = """
+                select * from products_uvarov_iv.product
+                where name like ?;
+                """;
         List<Product> products = new ArrayList<>();
 
         try (var connection = DriverManager.getConnection(JDBC);
-             var prepareStatement = connection.prepareStatement(selectSql)) {
-            prepareStatement.setString(1, "%" + (productName == null ? "" : productName) + "%");
+             var findAllPrepareStatement = connection.prepareStatement(findAllSql)) {
+            findAllPrepareStatement.setString(1, "%" + (productName == null ? "" : productName) + "%");
 
-            var resultSet = prepareStatement.executeQuery();
+            var resultSet = findAllPrepareStatement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
@@ -91,13 +102,16 @@ public class DBProductRepository implements ProductRepository {
 
     @Override
     public boolean deleteById(long id) {
-        var selectSql = "DELETE FROM products_uvarov_iv.PRODUCT where id = ?";
+        var deleteByIdSql = """
+                delete from products_uvarov_iv.product
+                where id = ?;
+                """;
 
         try (var connection = DriverManager.getConnection(JDBC);
-             var prepareStatement = connection.prepareStatement(selectSql)) {
-            prepareStatement.setLong(1, id);
+             var deleteByIdPrepareStatement = connection.prepareStatement(deleteByIdSql)) {
+            deleteByIdPrepareStatement.setLong(1, id);
 
-            var rows = prepareStatement.executeUpdate();
+            var rows = deleteByIdPrepareStatement.executeUpdate();
 
             return rows > 0;
         } catch (SQLException e) {
@@ -107,21 +121,21 @@ public class DBProductRepository implements ProductRepository {
 
     @Override
     public boolean update(Product product) {
-        var selectSql = """
-                UPDATE products_uvarov_iv.PRODUCT
-                SET 
+        var updateProductSql = """
+                update products_uvarov_iv.product
+                set
                 name = ?,
                 price = ?
                 where id = ?;
                 """;
 
         try (var connection = DriverManager.getConnection(JDBC);
-             var prepareStatement = connection.prepareStatement(selectSql)) {
-            prepareStatement.setString(1, product.getName());
-            prepareStatement.setDouble(2, product.getPrice().doubleValue());
-            prepareStatement.setLong(3, product.getId());
+             var updateProductPrepareStatement = connection.prepareStatement(updateProductSql)) {
+            updateProductPrepareStatement.setString(1, product.getName());
+            updateProductPrepareStatement.setDouble(2, product.getPrice().doubleValue());
+            updateProductPrepareStatement.setLong(3, product.getId());
 
-            var rows = prepareStatement.executeUpdate();
+            var rows = updateProductPrepareStatement.executeUpdate();
 
             return rows > 0;
         } catch (SQLException e) {

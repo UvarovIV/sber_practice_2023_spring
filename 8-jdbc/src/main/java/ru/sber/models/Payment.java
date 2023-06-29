@@ -11,6 +11,6 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 public class Payment {
-    BigDecimal sum;
+    long cardNumber;
     long userId;
 }

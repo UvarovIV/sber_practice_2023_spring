@@ -14,7 +14,7 @@ public interface ProductRepository {
      * @param product Информация о товаре
      * @return Возвращает идентификатор созданного товара
      */
-    long save(Product product);
+    long addNewProduct(Product product);
 
     /**
      * Производит поиск товара по id

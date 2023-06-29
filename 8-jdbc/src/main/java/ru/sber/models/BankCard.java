@@ -11,6 +11,6 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 public class BankCard {
-    private long idCard;
-    private BigDecimal account;
+    private long numberOfCard;
+    private BigDecimal money;
 }

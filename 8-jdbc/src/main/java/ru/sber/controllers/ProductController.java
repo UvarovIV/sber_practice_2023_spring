@@ -24,7 +24,7 @@ public class ProductController {
     public long addProduct(@RequestBody Product product) {
         log.info("Добавление товара {}", product);
 
-        return productRepository.save(product);
+        return productRepository.addNewProduct(product);
     }
 
     @GetMapping

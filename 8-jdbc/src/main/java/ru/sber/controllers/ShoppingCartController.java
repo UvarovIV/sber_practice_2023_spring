@@ -26,21 +26,21 @@ public class ShoppingCartController {
 
     /**
      * Добавляет товар в корзину
-     * @param idCart Уникальный идентификатор корзины
+     * @param idClient Уникальный идентификатор клиента
      * @param idProduct Уникальный идентификатор продукта
      * @return Возвращает корзину с внесенными изменениями
      */
-    @PostMapping("/{idCart}/product/{idProduct}")
-    public ResponseEntity<ShoppingCart> addProductToCart(@PathVariable long idCart, @PathVariable Long idProduct) {
+    @PostMapping("/{idClient}/product/{idProduct}")
+    public ResponseEntity<ShoppingCart> addProductToCart(@PathVariable long idClient, @PathVariable Long idProduct, @RequestBody Product product) {
 
-        log.info("Добавление в корзину товара с id: {}", idProduct);
+        log.info("Добавление в корзину товара с id: {} количеством {}", idProduct, product.getAmount());
 
-        Optional<ShoppingCart> cart = shoppingCartRepository.addToCart(idCart, idProduct);
+        boolean recordInserted = shoppingCartRepository.addToCart(idClient, idProduct, product.getAmount());
 
-        if (cart.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (recordInserted) {
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.ok().body(cart.get());
+            return ResponseEntity.notFound().build();
         }
 
     }
@@ -57,12 +57,12 @@ public class ShoppingCartController {
 
         log.info("Изменение количества товара в корзине");
 
-        Optional<ShoppingCart> cart = shoppingCartRepository.updateProductAmount(idCart, idProduct, product.getAmount());
+        boolean recordUpdated = shoppingCartRepository.updateProductAmount(idCart, idProduct, product.getAmount());
 
-        if (cart.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (recordUpdated) {
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.ok().body(cart.get());
+            return ResponseEntity.notFound().build();
         }
     }
 

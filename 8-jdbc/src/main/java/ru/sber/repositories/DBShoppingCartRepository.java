@@ -1,17 +1,10 @@
 package ru.sber.repositories;
 
 import org.springframework.stereotype.Repository;
-import ru.sber.models.Product;
-import ru.sber.models.ShoppingCart;
 
-import java.math.BigDecimal;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class DBShoppingCartRepository implements ShoppingCartRepository {
@@ -25,107 +18,92 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
     }
 
     @Override
-    public ShoppingCart createShoppingCart() {
-        var insertCartSql = """
-                insert into products_uvarov_iv.cart(promocode)
-                values (?);
+    public boolean addToCart(long idClient, long idProduct, int amount) {
+
+        var addToCartSql = """
+                insert into products_uvarov_iv.product_client
+                values(DEFAULT, ?, ?, ?);
                 """;
+
         try (var connection = DriverManager.getConnection(JDBC);
-             var insertCartPrepareStatement = connection.prepareStatement(insertCartSql, Statement.RETURN_GENERATED_KEYS)) {
+             var addToCartPrepareStatement = connection.prepareStatement(addToCartSql, Statement.RETURN_GENERATED_KEYS)) {
+            var product = productRepository.findById(idProduct);
 
-            insertCartPrepareStatement.setString(1, "");
-            insertCartPrepareStatement.executeUpdate();
+            if (product.isPresent()) {
+                addToCartPrepareStatement.setLong(1, idProduct);
+                addToCartPrepareStatement.setLong(2, getIdCart(idClient));
+                addToCartPrepareStatement.setInt(3, amount);
 
-            ResultSet rs = insertCartPrepareStatement.getGeneratedKeys();
-
-            if (rs.next()) {
-                return new ShoppingCart(rs.getLong(1), null, null);
+                addToCartPrepareStatement.executeUpdate();
+                return addToCartPrepareStatement.getGeneratedKeys().next();
             } else {
-                throw new RuntimeException("Ошибка при получении идентификатора");
+                throw new RuntimeException("Ошибка при получении идентификатора 1");
             }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
 
     }
 
-    @Override
-    public Optional<ShoppingCart> findById(long id) {
-        var selectCart = """
-                select * 
-                from products_uvarov_iv.cart
+    public long getIdCart(long idClient) {
+        var getIdCartSql = """
+                select * from products_uvarov_iv.client
                 where id = ?;
                 """;
-        var selectCartProducts = """
-                select *
-                from products_uvarov_iv.product_client pc
-                join products_uvarov_iv.product p on pc.id_product = p.id
-                where pc.id_cart = ?;
-                """;
-        List<Product> productList = new ArrayList<>();
+
         try (var connection = DriverManager.getConnection(JDBC);
-             var selectCartStatement = connection.prepareStatement(selectCart);
-             var selectCartProductsStatement = connection.prepareStatement(selectCartProducts)) {
+             var getIdCartPrepareStatement = connection.prepareStatement(getIdCartSql)) {
+            getIdCartPrepareStatement.setLong(1, idClient);
 
-            selectCartStatement.setLong(1, id);
-
-            var resultSet = selectCartStatement.executeQuery();
+            var resultSet = getIdCartPrepareStatement.executeQuery();
 
             if (resultSet.next()) {
-
-                selectCartProductsStatement.setLong(1, id);
-                var resultProducts = selectCartProductsStatement.executeQuery();
-                while (resultProducts.next()) {
-                    int idProduct = resultProducts.getInt("p.id");
-                    String nameProduct = resultProducts.getString("p.name");
-                    BigDecimal priceProduct = BigDecimal.valueOf(resultProducts.getDouble("price"));
-                    int amount = resultProducts.getInt("pc.count");
-                    productList.add(new Product(idProduct, nameProduct, priceProduct, amount));
-                }
-
-                return Optional.of(new ShoppingCart(id, productList, ""));
+                return resultSet.getLong(5);
             }
-            return Optional.empty();
+            throw new RuntimeException("Ошибка при получении идентификатора корзины");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Optional<ShoppingCart> addToCart(long idCart, long idProduct) {
-
-        var insertToCart = """
-                insert into products_uvarov_iv.product_client
-                values(DEFAULT, ?, ?, 1)
+    public boolean updateProductAmount(long idClient, long idProduct, int amount) {
+        var updateProductAmountSql = """
+                update products_uvarov_iv.product_client set count = ?
+                where id_product = ? and id_cart = ?;
                 """;
 
-        Optional<ShoppingCart> cart = findById(idCart);
-        Optional<Product> product = productRepository.findById(idProduct);
+        try (var connection = DriverManager.getConnection(JDBC);
+             var updateProductAmountPrepareStatement = connection.prepareStatement(updateProductAmountSql)) {
+            updateProductAmountPrepareStatement.setDouble(1, amount);
+            updateProductAmountPrepareStatement.setLong(2, idProduct);
+            updateProductAmountPrepareStatement.setLong(3, getIdCart(idClient));
 
-        if (cart.isPresent() && product.isPresent()) {
-            try (var connection = DriverManager.getConnection(JDBC);
-            var insertToCartStatement = connection.prepareStatement(insertToCart)) {
-                insertToCartStatement.setLong(1, idProduct);
-                insertToCartStatement.setLong(2, idCart);
-                insertToCartStatement.executeUpdate();
-                cart.get().getProductsList().add(product.get());
-                return cart;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            var rows = updateProductAmountPrepareStatement.executeUpdate();
+
+            return rows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        return Optional.empty();
     }
 
     @Override
-    public Optional<ShoppingCart> updateProductAmount(long idCart, long idProduct, int amount) {
-        return Optional.empty();
-    }
+    public boolean deleteProduct(long idClient, long idProduct) {
+        var deleteProductSql = """
+                delete from products_uvarov_iv.product_client
+                where id_cart = ? and id_product = ?;
+                """;
 
-    @Override
-    public boolean deleteProduct(long idCart, long idProduct) {
-        return false;
+        try (var connection = DriverManager.getConnection(JDBC);
+             var deleteProductPrepareStatement = connection.prepareStatement(deleteProductSql)) {
+            deleteProductPrepareStatement.setLong(1, getIdCart(idClient));
+            deleteProductPrepareStatement.setLong(2, idProduct);
+
+            var rows = deleteProductPrepareStatement.executeUpdate();
+
+            return rows > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

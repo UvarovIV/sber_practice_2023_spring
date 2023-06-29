@@ -1,6 +1,5 @@
 package ru.sber.repositories;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.sber.models.Product;
 import ru.sber.models.ShoppingCart;
@@ -15,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
-@Slf4j
 @Repository
 public class DBUserRepository implements UserRepository {
 
@@ -25,8 +22,8 @@ public class DBUserRepository implements UserRepository {
     @Override
     public long signUp(User user) {
         var insertSql = """
-                INSERT INTO products_uvarov_iv.client (name, username, password, cart_id, email)
-                VALUES (?, ?, ?, ?, ?);
+                insert into products_uvarov_iv.client (name, username, password, cart_id, email)
+                values (?, ?, ?, ?, ?);
                 """;
 
         try (var connection = DriverManager.getConnection(JDBC);
@@ -53,8 +50,8 @@ public class DBUserRepository implements UserRepository {
 
     private long generateCart() {
         var insertSql = """
-                INSERT INTO products_uvarov_iv.cart (promocode)
-                VALUES (?);
+                insert into products_uvarov_iv.cart (promocode)
+                values (?);
                 """;
 
         try (var connection = DriverManager.getConnection(JDBC);
@@ -69,6 +66,7 @@ public class DBUserRepository implements UserRepository {
             } else {
                 throw new RuntimeException("Ошибка при получении идентификатора");
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -76,21 +74,21 @@ public class DBUserRepository implements UserRepository {
 
     @Override
     public Optional<User> getUserById(long id) {
-        var selectUser = """
-                select * 
+        var selectUserSql = """
+                select *
                 from products_uvarov_iv.client
                 where id = ?;
                 """;
-        var selectCart = """
-                select *
+        var selectCartSql = """
+                select p.id, p.name, p.price, pc.count
                 from products_uvarov_iv.product_client pc
                 join products_uvarov_iv.product p on pc.id_product = p.id
                 where pc.id_cart = ?;
                 """;
-        List<Product> productList = new ArrayList<>();
+
         try (var connection = DriverManager.getConnection(JDBC);
-             var selectUserStatement = connection.prepareStatement(selectUser);
-             var selectCartStatement = connection.prepareStatement(selectCart)) {
+             var selectUserStatement = connection.prepareStatement(selectUserSql);
+             var selectCartStatement = connection.prepareStatement(selectCartSql)) {
 
             selectUserStatement.setLong(1, id);
 
@@ -104,15 +102,20 @@ public class DBUserRepository implements UserRepository {
 
                 selectCartStatement.setLong(1, idCart);
                 var resultProducts = selectCartStatement.executeQuery();
+                List<Product> productList = new ArrayList<>();
+
                 while (resultProducts.next()) {
-                    int idProduct = resultProducts.getInt("p.id");
-                    String nameProduct = resultProducts.getString("p.name");
+                    int idProduct = resultProducts.getInt("id");
+                    String nameProduct = resultProducts.getString("name");
                     BigDecimal priceProduct = BigDecimal.valueOf(resultProducts.getDouble("price"));
-                    int amount = resultProducts.getInt("pc.count");
+                    int amount = resultProducts.getInt("count");
                     productList.add(new Product(idProduct, nameProduct, priceProduct, amount));
                 }
-                ShoppingCart cart = new ShoppingCart((long) idCart, productList, "");
-                return Optional.of(new User(idUser, name, "", "", email, cart));
+
+
+                ShoppingCart cart = new ShoppingCart(idCart, productList, "");
+                User user = new User(idUser, name, "", "", email, cart);
+                return Optional.of(user);
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -123,29 +126,29 @@ public class DBUserRepository implements UserRepository {
 
     @Override
     public boolean deleteUserById(long id) {
-        var deleteUser = """
+        var deleteUserSql = """
                 delete from products_uvarov_iv.client
                 where id = ?;
                 """;
-        var deleteCart = """
+        var deleteCartSql = """
                 delete from products_uvarov_iv.cart
                 where id = ?;
                 """;
-        var deleteCartWithProducts = """
+        var deleteCartWithProductsSql = """
                 delete from products_uvarov_iv.product_client
                 where id_cart = ?;
                 """;
-        var selectCartId = """
+        var selectCartIdSql = """
                 select cart_id
                 from products_uvarov_iv.client
                 where id = ?;
                 """;
 
         try (var connection = DriverManager.getConnection(JDBC);
-             var selectCartIdStatement = connection.prepareStatement(selectCartId);
-             var deleteCartWithProductsStatement = connection.prepareStatement(deleteCartWithProducts);
-             var deleteCartStatement = connection.prepareStatement(deleteCart);
-             var deleteUserStatement = connection.prepareStatement(deleteUser)) {
+             var selectCartIdStatement = connection.prepareStatement(selectCartIdSql);
+             var deleteCartWithProductsStatement = connection.prepareStatement(deleteCartWithProductsSql);
+             var deleteCartStatement = connection.prepareStatement(deleteCartSql);
+             var deleteUserStatement = connection.prepareStatement(deleteUserSql)) {
 
             selectCartIdStatement.setLong(1, id);
             deleteUserStatement.setLong(1, id);
