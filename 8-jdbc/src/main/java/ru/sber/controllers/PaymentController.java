@@ -32,7 +32,7 @@ public class PaymentController {
         if (isPay) {
             return ResponseEntity.accepted().build();
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Средств на счету недостаточно");
         }
 
     }

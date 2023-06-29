@@ -166,7 +166,7 @@ public class DBUserRepository implements UserRepository {
                 return rows > 0;
 
             } else {
-                throw new RuntimeException();
+                return false;
             }
 
         } catch (SQLException e) {

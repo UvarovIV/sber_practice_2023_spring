@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.sber.models.Product;
 import ru.sber.repositories.ProductRepository;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +22,10 @@ public class ProductController {
     }
 
     @PostMapping
-    public long addProduct(@RequestBody Product product) {
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
         log.info("Добавление товара {}", product);
 
-        return productRepository.addNewProduct(product);
+        return ResponseEntity.created(URI.create("products/" + productRepository.addNewProduct(product))).build();
     }
 
     @GetMapping

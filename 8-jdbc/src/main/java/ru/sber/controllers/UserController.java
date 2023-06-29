@@ -7,6 +7,7 @@ import ru.sber.models.AbridgedUser;
 import ru.sber.models.User;
 import ru.sber.repositories.UserRepository;
 
+import java.net.URI;
 import java.util.Optional;
 
 @Slf4j
@@ -26,9 +27,9 @@ public class UserController {
      * @return Возвращает идентификатор зарегистрированного пользователя
      */
     @PostMapping
-    public long signUp(@RequestBody User user) {
+    public ResponseEntity<?> signUp(@RequestBody User user) {
         log.info("Регистрация пользователя {}", user);
-        return userRepository.signUp(user);
+        return ResponseEntity.created(URI.create("user/" + userRepository.signUp(user))).build();
     }
 
     /**

@@ -1,6 +1,7 @@
 package ru.sber.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.models.Product;
@@ -8,6 +9,7 @@ import ru.sber.models.ShoppingCart;
 import ru.sber.repositories.ProductRepository;
 import ru.sber.repositories.ShoppingCartRepository;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +40,7 @@ public class ShoppingCartController {
         boolean recordInserted = shoppingCartRepository.addToCart(idClient, idProduct, product.getAmount());
 
         if (recordInserted) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.created(URI.create("cart/" + idClient + "/product/" + idProduct)).build();
         } else {
             return ResponseEntity.notFound().build();
         }

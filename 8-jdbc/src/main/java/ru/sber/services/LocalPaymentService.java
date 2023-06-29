@@ -2,20 +2,14 @@ package ru.sber.services;
 
 import org.springframework.stereotype.Service;
 import ru.sber.exceptions.CartIsEmptyException;
-import ru.sber.exceptions.NotEnoughMoneyException;
 import ru.sber.exceptions.UserNotFoundException;
 import ru.sber.models.Payment;
-import ru.sber.models.Product;
-import ru.sber.models.ShoppingCart;
-import ru.sber.models.User;
 import ru.sber.proxies.BankAppProxy;
 import ru.sber.repositories.UserRepository;
 
 import java.math.BigDecimal;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Сервис для оплаты
@@ -34,7 +28,7 @@ public class LocalPaymentService implements PaymentService {
     }
 
     private BigDecimal getSumPriceCart(long userId) {
-        String selectSum = """
+        String countSumSql = """
                 select sum(p.price * pc.count) sum
                 from products_uvarov_iv.client c
                 join products_uvarov_iv.product_client pc on pc.id_cart = c.cart_id
@@ -42,27 +36,27 @@ public class LocalPaymentService implements PaymentService {
                 where c.id = ?;
                 """;
 
-        String countUser = """ 
+        String checkUserSql = """ 
                 select count(*) client
                 from products_uvarov_iv.client
                 where id = ?;
                 """;
 
         try (var connection = DriverManager.getConnection(JDBC);
-             var selectSumStatement = connection.prepareStatement(selectSum);
-             var countUserStatement = connection.prepareStatement(countUser)) {
+             var countSumStatement = connection.prepareStatement(countSumSql);
+             var checkUserStatement = connection.prepareStatement(checkUserSql)) {
 
-            countUserStatement.setLong(1, userId);
-            selectSumStatement.setLong(1, userId);
+            countSumStatement.setLong(1, userId);
+            checkUserStatement.setLong(1, userId);
 
-            var act = countUserStatement.executeQuery();
-            if (act.next()) {
-                int userFound = act.getInt("client");
+            var check = checkUserStatement.executeQuery();
+            if (check.next()) {
+                int userFound = check.getInt("client");
                 if (userFound == 0) {
                     throw new UserNotFoundException("Пользователь не найден");
                 }
             }
-            var resultProducts = selectSumStatement.executeQuery();
+            var resultProducts = countSumStatement.executeQuery();
             if (resultProducts.next()) {
                 double sum = resultProducts.getDouble("sum");
                 if (sum != 0) {

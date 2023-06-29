@@ -1,6 +1,7 @@
 package ru.sber.repositories;
 
 import org.springframework.stereotype.Repository;
+import ru.sber.exceptions.IdNotFoundException;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -37,7 +38,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
                 addToCartPrepareStatement.executeUpdate();
                 return addToCartPrepareStatement.getGeneratedKeys().next();
             } else {
-                throw new RuntimeException("Ошибка при получении идентификатора 1");
+                return false;
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -60,7 +61,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
             if (resultSet.next()) {
                 return resultSet.getLong(5);
             }
-            throw new RuntimeException("Ошибка при получении идентификатора корзины");
+            throw new IdNotFoundException("Ошибка при получении идентификатора корзины");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
