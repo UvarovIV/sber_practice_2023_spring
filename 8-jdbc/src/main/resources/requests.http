@@ -3,27 +3,27 @@ POST localhost:8080/users
 Content-Type: application/json
 
 {
-  "name": "Павел",
-  "login": "Sobol",
-  "password": "password",
-  "email": "sobol@gmail.com"
+  "name": "Рандом",
+  "login": "random",
+  "password": "11111",
+  "email": "random@gmail.com"
 }
 
 ###
-GET localhost:8080/users/2
+GET localhost:8080/users/4
 Content-Type: application/json
 
 ###
-DELETE localhost:8080/users/7
+DELETE localhost:8080/users/4
 
 ###
 POST localhost:8080/products
 Content-Type: application/json
 
 {
-  "name": "Груша",
-  "price": 60,
-  "amount": 15
+  "name": "Лайм",
+  "price": 80,
+  "amount": 10
 }
 
 ###
@@ -33,14 +33,14 @@ Content-Type: application/json
 {
   "id": 4,
   "name": "Капуста",
-  "price": 85
+  "price": 90
 }
 
 ###
 DELETE localhost:8080/products/4
 
 ###
-GET localhost:8080/products/2
+GET localhost:8080/products/3
 
 ###
 GET localhost:8080/products?name=Кофе
@@ -55,11 +55,11 @@ POST localhost:8080/cart/2/product/2
 Content-Type: application/json
 
 {
-  "amount": 1
+  "amount": 3
 }
 
 ###
-POST localhost:8080/cart/2/product/4
+POST localhost:8080/cart/2/product/3
 Content-Type: application/json
 
 {
@@ -67,11 +67,11 @@ Content-Type: application/json
 }
 
 ###
-PUT localhost:8080/cart/2/product/4
+PUT localhost:8080/cart/2/product/2
 Content-Type: application/json
 
 {
-  "amount": 30
+  "amount": 10
 }
 
 ###
@@ -86,7 +86,7 @@ POST localhost:8080/payment
 Content-Type: application/json
 
 {
-  "cardNumber": 123444,
+  "cardNumber": 143456,
   "userId": 2
 }
 

@@ -34,16 +34,16 @@ public class LocalPaymentService implements PaymentService {
      */
     private BigDecimal getSumPriceCart(long userId) {
         String countSumSql = """
-                select sum(p.price * pc.count) sum
-                from products_uvarov_iv.client c
-                join products_uvarov_iv.product_client pc on pc.id_cart = c.cart_id
-                join products_uvarov_iv.product p on p.id = pc.id_product
+                select sum(p.price * pc.amount) sum
+                from products_uvarov_iv.clients c
+                join products_uvarov_iv.products_carts pc on pc.id_cart = c.cart_id
+                join products_uvarov_iv.products p on p.id = pc.id_product
                 where c.id = ?;
                 """;
 
         String checkUserSql = """ 
                 select count(*) client
-                from products_uvarov_iv.client
+                from products_uvarov_iv.clients
                 where id = ?;
                 """;
 

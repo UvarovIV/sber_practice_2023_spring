@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> signUp(@RequestBody User user) {
         log.info("Регистрация пользователя {}", user);
-        return ResponseEntity.created(URI.create("user/" + userRepository.signUp(user))).build();
+        return ResponseEntity.created(URI.create("users/" + userRepository.signUp(user))).build();
     }
 
     /**

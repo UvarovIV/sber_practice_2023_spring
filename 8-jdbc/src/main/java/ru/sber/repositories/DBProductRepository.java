@@ -20,7 +20,7 @@ public class DBProductRepository implements ProductRepository {
     @Override
     public long addNewProduct(Product product) {
         var addNewProductSql = """
-                insert into products_uvarov_iv.product (name, price, count)
+                insert into products_uvarov_iv.products (name, price, amount)
                 values (?, ?, ?);
                 """;
 
@@ -47,7 +47,7 @@ public class DBProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findById(long productId) {
         var findProductByIdSql = """
-                select * from products_uvarov_iv.product
+                select * from products_uvarov_iv.products
                 where id = ?;
                 """;
 
@@ -61,7 +61,8 @@ public class DBProductRepository implements ProductRepository {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, name, BigDecimal.valueOf(price), 0);
+                int amount = resultSet.getInt("amount");
+                Product product = new Product(id, name, BigDecimal.valueOf(price), amount);
 
                 return Optional.of(product);
             }
@@ -76,7 +77,7 @@ public class DBProductRepository implements ProductRepository {
     @Override
     public List<Product> findAll(String productName) {
         var findAllSql = """
-                select * from products_uvarov_iv.product
+                select * from products_uvarov_iv.products
                 where name like ?;
                 """;
         List<Product> products = new ArrayList<>();
@@ -90,7 +91,8 @@ public class DBProductRepository implements ProductRepository {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
                 double price = resultSet.getDouble("price");
-                Product product = new Product(id, name, BigDecimal.valueOf(price), 0);
+                int amount = resultSet.getInt("amount");
+                Product product = new Product(id, name, BigDecimal.valueOf(price), amount);
 
                 products.add(product);
             }
@@ -104,7 +106,7 @@ public class DBProductRepository implements ProductRepository {
     @Override
     public boolean deleteById(long id) {
         var deleteByIdSql = """
-                delete from products_uvarov_iv.product
+                delete from products_uvarov_iv.products
                 where id = ?;
                 """;
 
@@ -123,7 +125,7 @@ public class DBProductRepository implements ProductRepository {
     @Override
     public boolean update(Product product) {
         var updateProductSql = """
-                update products_uvarov_iv.product
+                update products_uvarov_iv.products
                 set
                 name = ?,
                 price = ?

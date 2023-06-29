@@ -22,7 +22,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
     public boolean addToCart(long idClient, long idProduct, int amount) {
 
         var addToCartSql = """
-                insert into products_uvarov_iv.product_client
+                insert into products_uvarov_iv.products_carts
                 values(DEFAULT, ?, ?, ?);
                 """;
 
@@ -53,7 +53,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
      */
     public long getIdCart(long idClient) {
         var getIdCartSql = """
-                select * from products_uvarov_iv.client
+                select * from products_uvarov_iv.clients
                 where id = ?;
                 """;
 
@@ -64,7 +64,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
             var resultSet = getIdCartPrepareStatement.executeQuery();
 
             if (resultSet.next()) {
-                return resultSet.getLong(5);
+                return resultSet.getLong("cart_id");
             }
             throw new IdNotFoundException("Ошибка при получении идентификатора корзины");
         } catch (SQLException e) {
@@ -75,7 +75,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
     @Override
     public boolean updateProductAmount(long idClient, long idProduct, int amount) {
         var updateProductAmountSql = """
-                update products_uvarov_iv.product_client set count = ?
+                update products_uvarov_iv.products_carts set amount = ?
                 where id_product = ? and id_cart = ?;
                 """;
 
@@ -96,7 +96,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
     @Override
     public boolean deleteProduct(long idClient, long idProduct) {
         var deleteProductSql = """
-                delete from products_uvarov_iv.product_client
+                delete from products_uvarov_iv.products_carts
                 where id_cart = ? and id_product = ?;
                 """;
 

@@ -22,7 +22,7 @@ public class DBUserRepository implements UserRepository {
     @Override
     public long signUp(User user) {
         var insertSql = """
-                insert into products_uvarov_iv.client (name, username, password, cart_id, email)
+                insert into products_uvarov_iv.clients (name, username, password, cart_id, email)
                 values (?, ?, ?, ?, ?);
                 """;
 
@@ -54,7 +54,7 @@ public class DBUserRepository implements UserRepository {
      */
     private long generateCart() {
         var insertSql = """
-                insert into products_uvarov_iv.cart (promocode)
+                insert into products_uvarov_iv.carts (promocode)
                 values (?);
                 """;
 
@@ -80,13 +80,13 @@ public class DBUserRepository implements UserRepository {
     public Optional<User> getUserById(long id) {
         var selectUserSql = """
                 select *
-                from products_uvarov_iv.client
+                from products_uvarov_iv.clients
                 where id = ?;
                 """;
         var selectCartSql = """
-                select p.id, p.name, p.price, pc.count
-                from products_uvarov_iv.product_client pc
-                join products_uvarov_iv.product p on pc.id_product = p.id
+                select p.id, p.name, p.price, pc.amount
+                from products_uvarov_iv.products_carts pc
+                join products_uvarov_iv.products p on pc.id_product = p.id
                 where pc.id_cart = ?;
                 """;
 
@@ -112,7 +112,7 @@ public class DBUserRepository implements UserRepository {
                     int idProduct = resultProducts.getInt("id");
                     String nameProduct = resultProducts.getString("name");
                     BigDecimal priceProduct = BigDecimal.valueOf(resultProducts.getDouble("price"));
-                    int amount = resultProducts.getInt("count");
+                    int amount = resultProducts.getInt("amount");
                     productList.add(new Product(idProduct, nameProduct, priceProduct, amount));
                 }
 
@@ -131,20 +131,20 @@ public class DBUserRepository implements UserRepository {
     @Override
     public boolean deleteUserById(long id) {
         var deleteUserSql = """
-                delete from products_uvarov_iv.client
+                delete from products_uvarov_iv.clients
                 where id = ?;
                 """;
         var deleteCartSql = """
-                delete from products_uvarov_iv.cart
+                delete from products_uvarov_iv.carts
                 where id = ?;
                 """;
         var deleteCartWithProductsSql = """
-                delete from products_uvarov_iv.product_client
+                delete from products_uvarov_iv.products_carts
                 where id_cart = ?;
                 """;
         var selectCartIdSql = """
                 select cart_id
-                from products_uvarov_iv.client
+                from products_uvarov_iv.clients
                 where id = ?;
                 """;
 
