@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Стороннее приложение для взаимодействия с банком
+ */
 @Component
 public class BankAppProxy implements BankAppProxyInterface {
 

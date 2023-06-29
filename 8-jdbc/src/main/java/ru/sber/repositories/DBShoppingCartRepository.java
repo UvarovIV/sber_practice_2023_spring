@@ -46,6 +46,11 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
 
     }
 
+    /**
+     * Получает id корзины по id пользователя
+     * @param idClient Уникальный идентификатор клиента
+     * @return Возвращает id корзины
+     */
     public long getIdCart(long idClient) {
         var getIdCartSql = """
                 select * from products_uvarov_iv.client

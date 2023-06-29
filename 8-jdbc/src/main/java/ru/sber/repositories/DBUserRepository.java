@@ -48,6 +48,10 @@ public class DBUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * Генерирует новую корзину
+     * @return Возвращает id сгенерированной корзины
+     */
     private long generateCart() {
         var insertSql = """
                 insert into products_uvarov_iv.cart (promocode)

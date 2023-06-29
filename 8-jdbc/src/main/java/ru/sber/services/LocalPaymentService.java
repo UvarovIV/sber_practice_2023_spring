@@ -27,6 +27,11 @@ public class LocalPaymentService implements PaymentService {
         this.bankAppProxy = bankAppProxy;
     }
 
+    /**
+     * Рассчитывает стоимость товаров в корзине пользователя
+     * @param userId Уникальный идентификатор пользователя
+     * @return Возвращает полную стоимость корзины
+     */
     private BigDecimal getSumPriceCart(long userId) {
         String countSumSql = """
                 select sum(p.price * pc.count) sum

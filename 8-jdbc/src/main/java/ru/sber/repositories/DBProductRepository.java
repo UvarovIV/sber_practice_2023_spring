@@ -20,8 +20,8 @@ public class DBProductRepository implements ProductRepository {
     @Override
     public long addNewProduct(Product product) {
         var addNewProductSql = """
-                insert into products_uvarov_iv.product (name, price)
-                values (?,?);
+                insert into products_uvarov_iv.product (name, price, count)
+                values (?, ?, ?);
                 """;
 
         try (var connection = DriverManager.getConnection(JDBC);
@@ -29,6 +29,7 @@ public class DBProductRepository implements ProductRepository {
 
             addNewProductPrepareStatement.setString(1, product.getName());
             addNewProductPrepareStatement.setDouble(2, product.getPrice().doubleValue());
+            addNewProductPrepareStatement.setInt(3, product.getAmount());
 
             addNewProductPrepareStatement.executeUpdate();
 

@@ -21,6 +21,11 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
+    /**
+     * Добавляет новый товар
+     * @param product Добавляемый товар
+     * @return Возвращает статус добавления товара
+     */
     @PostMapping
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
         log.info("Добавление товара {}", product);
@@ -28,6 +33,11 @@ public class ProductController {
         return ResponseEntity.created(URI.create("products/" + productRepository.addNewProduct(product))).build();
     }
 
+    /**
+     * Выдает все товары по фильтру
+     * @param name Название товара (фильтр)
+     * @return Возвращает список найденных товаров
+     */
     @GetMapping
     public List<Product> getProducts(@RequestParam(required = false) String name) {
         log.info("Поиск товаров по имени {}", name);
@@ -35,6 +45,11 @@ public class ProductController {
         return productRepository.findAll(name);
     }
 
+    /**
+     * Получение товара по id
+     * @param id Идентификатор для поиска
+     * @return Возвращает найденный товар
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProducts(@PathVariable long id) {
         log.info("Получение товара по id");
@@ -47,6 +62,11 @@ public class ProductController {
         }
     }
 
+    /**
+     * Обновление информации о товаре
+     * @param product Информация об обновленном товаре
+     * @return Возвращает обновленный товар
+     */
     @PutMapping
     public Product updateProduct(@RequestBody Product product) {
         log.info("Обновление информации о товаре");
@@ -55,6 +75,11 @@ public class ProductController {
         return product;
     }
 
+    /**
+     * Удаление товара по id
+     * @param id Идентификатор товара
+     * @return Возвращает статус удаления товара
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable long id) {
         log.info("Удаление продукта по id");
