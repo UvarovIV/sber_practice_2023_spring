@@ -16,8 +16,6 @@ import java.sql.Statement;
 @Repository
 public class DBShoppingCartRepository implements ShoppingCartRepository {
 
-    public static final String JDBC = "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=postgres";
-
     ProductRepository productRepository;
     private final JdbcTemplate jdbcTemplate;
 
@@ -51,7 +49,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
     @Override
     public boolean updateProductAmount(long idClient, long idProduct, int amount) {
         var updateProductAmountSql = """
-                update products_uvarov_iv.products_carts set amount = ?
+                update products_carts set amount = ?
                 where id_product = ? and id_cart = ?;
                 """;
 
@@ -73,7 +71,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
     @Override
     public boolean deleteProduct(long idClient, long idProduct) {
         var deleteProductSql = """
-                delete from products_uvarov_iv.products_carts
+                delete from products_carts
                 where id_cart = ? and id_product = ?;
                 """;
 
