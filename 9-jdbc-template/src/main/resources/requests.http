@@ -67,11 +67,11 @@ Content-Type: application/json
 }
 
 ###
-PUT localhost:8080/cart/2/product/2
+PUT localhost:8080/cart/2/product/3
 Content-Type: application/json
 
 {
-  "amount": 30
+  "amount": 1
 }
 
 ###

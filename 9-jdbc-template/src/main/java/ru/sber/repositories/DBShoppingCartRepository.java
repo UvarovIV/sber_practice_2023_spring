@@ -6,8 +6,12 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.sber.exceptions.CartIsEmptyException;
 import ru.sber.exceptions.IdNotFoundException;
+import ru.sber.exceptions.OutOfStockException;
+import ru.sber.exceptions.UserNotFoundException;
 
+import java.math.BigDecimal;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -87,5 +91,55 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
 
         return rows > 0;
 
+    }
+
+    @Override
+    public BigDecimal getSumPriceCart(long userId) {
+        String countSumSql = """
+                select sum(p.price * pc.amount) sum
+                from clients c
+                join products_carts pc on pc.id_cart = c.cart_id
+                join products p on p.id = pc.id_product
+                where c.id = ?;
+                """;
+
+        String checkUserSql = """ 
+                select count(*) client
+                from clients
+                where id = ?;
+                """;
+
+        String updateAmountOfProductSql = """
+                update products p 
+                set amount = amount - (select products_carts.amount from products_carts where id_product = p.id and id_cart = ?)
+                where id in (select id_product from products_carts where id_cart = ?)
+                """;
+
+        String getAmountOfProductSql = """
+                select count(*)
+                from products p
+                join products_carts pc on p.id = pc.id_product and p.amount < pc.amount
+                where id_cart=?;
+                """;
+
+        Integer userFound = jdbcTemplate.queryForObject(checkUserSql, Integer.class, userId);
+
+        if (userFound < 1) {
+            throw new UserNotFoundException("Пользователь не найден");
+        }
+
+        Integer count = jdbcTemplate.queryForObject(getAmountOfProductSql, Integer.class, userId);
+        if (count > 0) {
+            throw new OutOfStockException("Такого количества товара нет в наличии");
+        }
+
+        jdbcTemplate.update(updateAmountOfProductSql, userId, userId);
+        Double sum = jdbcTemplate.queryForObject(countSumSql, Double.class, userId);
+
+        if (sum == null) {
+            throw new CartIsEmptyException("В корзине нет ни одного товара");
+        }
+
+        return BigDecimal.valueOf(sum);
     }
 }

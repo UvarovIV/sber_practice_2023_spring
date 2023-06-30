@@ -1,5 +1,7 @@
 package ru.sber.repositories;
 
+import java.math.BigDecimal;
+
 /**
  * Класс, отвечающий за работу с корзиной
  */
@@ -32,5 +34,12 @@ public interface ShoppingCartRepository {
      * @return Возвращает корзину с внесенными изменениями
      */
     boolean deleteProduct(long idClient, long idProduct);
+
+    /**
+     * Рассчитывает стоимость товаров в корзине пользователя
+     * @param userId Уникальный идентификатор пользователя
+     * @return Возвращает полную стоимость корзины
+     */
+    BigDecimal getSumPriceCart(long userId);
 
 }
