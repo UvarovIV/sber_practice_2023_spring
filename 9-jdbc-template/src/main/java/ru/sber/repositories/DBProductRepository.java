@@ -142,4 +142,24 @@ public class DBProductRepository implements ProductRepository {
         return rows > 0;
     }
 
+    @Override
+    public void updateAmountOfProductsAfterPurchase(long userId) {
+        String updateAmountOfProductSql = """
+                update products p
+                set amount = amount - (select products_carts.amount from products_carts where id_product = p.id and id_cart = ?)
+                where id in (select id_product from products_carts where id_cart = ?)
+                """;
+
+        PreparedStatementCreator preparedStatementCreator = connection -> {
+            var preparedStatement = connection.prepareStatement(updateAmountOfProductSql);
+            preparedStatement.setLong(1, userId);
+            preparedStatement.setLong(2, userId);
+
+            return preparedStatement;
+        };
+
+        jdbcTemplate.update(preparedStatementCreator);
+
+
+    }
 }

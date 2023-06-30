@@ -30,4 +30,6 @@ public interface UserRepository {
      */
     boolean deleteUserById(long id);
 
+    boolean checkUserExistence(long userId);
+
 }

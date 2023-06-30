@@ -43,4 +43,6 @@ public interface ProductRepository {
      * @return Возвращает успешность удаления товара
      */
     boolean deleteById(long id);
+
+    void updateAmountOfProductsAfterPurchase(long userId);
 }

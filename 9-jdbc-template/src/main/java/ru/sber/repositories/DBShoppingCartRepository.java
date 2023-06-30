@@ -3,30 +3,25 @@ package ru.sber.repositories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.sber.exceptions.CartIsEmptyException;
-import ru.sber.exceptions.IdNotFoundException;
 import ru.sber.exceptions.OutOfStockException;
 import ru.sber.exceptions.UserNotFoundException;
 
 import java.math.BigDecimal;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Optional;
 
 @Repository
 public class DBShoppingCartRepository implements ShoppingCartRepository {
 
-    ProductRepository productRepository;
+    private final UserRepository userRepository;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public DBShoppingCartRepository(ProductRepository productRepository, JdbcTemplate jdbcTemplate) {
-        this.productRepository = productRepository;
+    public DBShoppingCartRepository(UserRepository userRepository, JdbcTemplate jdbcTemplate) {
+
         this.jdbcTemplate = jdbcTemplate;
+        this.userRepository = userRepository;
     }
 
 
@@ -93,47 +88,39 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
 
     }
 
+    public int getAmountOfExcessProducts(long userId) {
+        String getAmountOfProductSql = """
+                select count(*)
+                from products p
+                join products_carts pc on p.id = pc.id_product and p.amount < pc.amount
+                where id_cart = ?;
+                """;
+        Integer result = jdbcTemplate.queryForObject(getAmountOfProductSql, Integer.class, userId);
+
+        return Optional.ofNullable(result).orElse(0);
+    }
+
     @Override
     public BigDecimal getSumPriceCart(long userId) {
         String countSumSql = """
-                select sum(p.price * pc.amount) sum
+                select sum(p.price * pc.amount)
                 from clients c
                 join products_carts pc on pc.id_cart = c.cart_id
                 join products p on p.id = pc.id_product
                 where c.id = ?;
                 """;
 
-        String checkUserSql = """ 
-                select count(*) client
-                from clients
-                where id = ?;
-                """;
+        boolean userNotFound = userRepository.checkUserExistence(userId);
 
-        String updateAmountOfProductSql = """
-                update products p 
-                set amount = amount - (select products_carts.amount from products_carts where id_product = p.id and id_cart = ?)
-                where id in (select id_product from products_carts where id_cart = ?)
-                """;
-
-        String getAmountOfProductSql = """
-                select count(*)
-                from products p
-                join products_carts pc on p.id = pc.id_product and p.amount < pc.amount
-                where id_cart=?;
-                """;
-
-        Integer userFound = jdbcTemplate.queryForObject(checkUserSql, Integer.class, userId);
-
-        if (userFound < 1) {
+        if (userNotFound) {
             throw new UserNotFoundException("Пользователь не найден");
         }
 
-        Integer count = jdbcTemplate.queryForObject(getAmountOfProductSql, Integer.class, userId);
-        if (count > 0) {
+        int amount = getAmountOfExcessProducts(userId);
+        if (amount > 0) {
             throw new OutOfStockException("Такого количества товара нет в наличии");
         }
 
-        jdbcTemplate.update(updateAmountOfProductSql, userId, userId);
         Double sum = jdbcTemplate.queryForObject(countSumSql, Double.class, userId);
 
         if (sum == null) {

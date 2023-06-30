@@ -12,9 +12,8 @@ import ru.sber.models.ShoppingCart;
 import ru.sber.models.User;
 
 import java.math.BigDecimal;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.Optional;
 
 @Repository
@@ -84,13 +83,6 @@ public class DBUserRepository implements UserRepository {
                 where id = ?;
                 """;
 
-        var selectCartSql = """
-                select p.id, p.name, p.price, pc.amount
-                from products_carts pc
-                join products p on pc.id_product = p.id
-                where pc.id_cart = ?;
-                """;
-
         PreparedStatementCreator preparedStatementCreator = connection -> {
             var prepareStatement = connection.prepareStatement(selectUserSql);
             prepareStatement.setInt(1, (int) id);
@@ -107,6 +99,19 @@ public class DBUserRepository implements UserRepository {
 
         return jdbcTemplate.query(preparedStatementCreator, userRowMapper).stream().findAny();
 
+    }
+
+    @Override
+    public boolean checkUserExistence(long userId) {
+        String checkUserSql = """
+                select count(*)
+                from clients
+                where id = ?;
+                """;
+
+        int rows = jdbcTemplate.queryForObject(checkUserSql, Integer.class, userId);
+
+        return rows < 1;
     }
 
 
