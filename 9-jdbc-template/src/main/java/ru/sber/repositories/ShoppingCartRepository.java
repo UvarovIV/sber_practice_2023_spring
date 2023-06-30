@@ -42,4 +42,5 @@ public interface ShoppingCartRepository {
      */
     BigDecimal getSumPriceCart(long userId);
 
+    boolean clearCart(long userId);
 }

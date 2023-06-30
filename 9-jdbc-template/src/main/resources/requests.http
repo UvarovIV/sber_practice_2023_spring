@@ -51,11 +51,11 @@ GET localhost:8080/products
 Content-Type: application/json
 
 ###
-POST localhost:8080/cart/2/product/1
+POST localhost:8080/cart/1/product/2
 Content-Type: application/json
 
 {
-  "amount": 3
+  "amount": 1
 }
 
 ###
@@ -87,6 +87,6 @@ Content-Type: application/json
 
 {
   "cardNumber": 123456,
-  "userId": 3
+  "userId": 1
 }
 

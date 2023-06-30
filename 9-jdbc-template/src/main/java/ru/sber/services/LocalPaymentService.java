@@ -38,6 +38,7 @@ public class LocalPaymentService implements PaymentService {
 
         if (amountOfMoney.compareTo(sum) >= 0) {
             productRepository.updateAmountOfProductsAfterPurchase(userId);
+            shoppingCartRepository.clearCart(userId);
             return true;
         }
 

@@ -129,4 +129,23 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
 
         return BigDecimal.valueOf(sum);
     }
+
+    @Override
+    public boolean clearCart(long userId) {
+        String clearCartSql = """
+        delete from products_carts
+        where id_cart = ?;
+        """;
+
+        PreparedStatementCreator preparedStatementCreator = connection -> {
+            var prepareStatement = connection.prepareStatement(clearCartSql);
+            prepareStatement.setLong(1, userId);
+
+            return prepareStatement;
+        };
+
+        int rows = jdbcTemplate.update(preparedStatementCreator);
+
+        return rows > 0;
+    }
 }
