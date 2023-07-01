@@ -88,7 +88,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
 
     }
 
-    public int getAmountOfExcessProducts(long userId) {
+    public boolean checkProductsEnough(long userId) {
         String getAmountOfProductSql = """
                 select count(*)
                 from products p
@@ -97,7 +97,7 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
                 """;
         Integer result = jdbcTemplate.queryForObject(getAmountOfProductSql, Integer.class, userId);
 
-        return Optional.ofNullable(result).orElse(0);
+        return Optional.ofNullable(result).orElse(0) > 0;
     }
 
     @Override
@@ -116,8 +116,8 @@ public class DBShoppingCartRepository implements ShoppingCartRepository {
             throw new UserNotFoundException("Пользователь не найден");
         }
 
-        int amount = getAmountOfExcessProducts(userId);
-        if (amount > 0) {
+        boolean productsNotEnough = checkProductsEnough(userId);
+        if (productsNotEnough) {
             throw new OutOfStockException("Такого количества товара нет в наличии");
         }
 

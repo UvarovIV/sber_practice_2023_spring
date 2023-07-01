@@ -51,10 +51,10 @@ values ('Мясо', 300.0, 10);
 insert into products_uvarov_iv.products_carts (id_product, id_cart, amount)
 values (1, 1, 3);
 insert into products_uvarov_iv.products_carts (id_product, id_cart, amount)
-values (1, 2, 5);
+values (2, 1, 5);
 insert into products_uvarov_iv.products_carts (id_product, id_cart, amount)
-values (2, 4, 6);
+values (4, 2, 6);
 insert into products_uvarov_iv.products_carts (id_product, id_cart, amount)
 values (3, 3, 10);
 insert into products_uvarov_iv.products_carts (id_product, id_cart, amount)
-values (3, 6, 10);
+values (6, 3, 10);
