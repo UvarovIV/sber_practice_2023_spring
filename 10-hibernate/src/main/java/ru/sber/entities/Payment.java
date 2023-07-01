@@ -1,4 +1,4 @@
-package ru.sber.models;
+package ru.sber.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
