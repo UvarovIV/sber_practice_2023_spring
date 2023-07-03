@@ -31,11 +31,11 @@ PUT localhost:8080/cart/1/product/1
 Content-Type: application/json
 
 {
-  "amount": 1
+  "amount": 3
 }
 
 ###
-//Попытка обновить количество товара в несуществующую корзине
+//Попытка обновить количество товара в несуществующей корзине
 PUT localhost:8080/cart/111/product/1
 Content-Type: application/json
 

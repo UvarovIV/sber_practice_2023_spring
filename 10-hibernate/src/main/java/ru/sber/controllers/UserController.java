@@ -1,5 +1,6 @@
 package ru.sber.controllers;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,8 @@ public class UserController {
      * @return Возвращает идентификатор зарегистрированного пользователя
      */
     @PostMapping
-    public ResponseEntity<?> signUp(@RequestBody User user) {
+    public ResponseEntity<?> signUp(@Valid @RequestBody User user) {
         long userId = userService.signUp(user);
-        if (userId == -1) {
-            return ResponseEntity.badRequest().body("Не все значения заполнены");
-        }
         log.info("Регистрация пользователя {}", user);
         return ResponseEntity.created(URI.create("users/" + userId)).build();
     }

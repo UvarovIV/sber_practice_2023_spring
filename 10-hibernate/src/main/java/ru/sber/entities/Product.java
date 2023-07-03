@@ -1,6 +1,9 @@
 package ru.sber.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,11 +24,14 @@ public class Product {
     private long id;
 
     @Column(nullable = false)
+    @NotEmpty(message = "Имя не заполнено")
     private String name;
 
     @Column(nullable = false)
+    @NotNull(message = "Цена не заполнена")
     private BigDecimal price;
 
     @Column(nullable = false)
-    private int amount;
+    @NotNull(message = "Количество не заполнено")
+    private Integer amount;
 }

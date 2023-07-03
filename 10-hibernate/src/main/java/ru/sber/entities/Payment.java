@@ -1,5 +1,6 @@
 package ru.sber.entities;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,6 +10,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Payment {
-    long cardNumber;
-    long userId;
+    @NotNull(message = "Не указан номер карты")
+    Long cardNumber;
+    @NotNull(message = "Не указан User Id")
+    Long userId;
 }

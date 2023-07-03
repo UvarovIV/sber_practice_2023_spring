@@ -17,14 +17,14 @@ import java.util.Optional;
  * Сервис для взаимодействия с корзиной пользователя
  */
 @Service
-public class CartServiceImplementation implements CartService {
+public class CartServiceImpl implements CartService {
 
     CartRepository cartRepository;
     UserRepository userRepository;
     ProductRepository productRepository;
 
     @Autowired
-    public CartServiceImplementation(CartRepository cartRepository, UserRepository userRepository, ProductRepository productRepository) {
+    public CartServiceImpl(CartRepository cartRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;

@@ -1,5 +1,6 @@
 package ru.sber.controllers;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class PaymentController {
      * @return Возвращает статус выполнения операции
      */
     @PostMapping
-    public ResponseEntity<?> pay(@RequestBody Payment payment) {
+    public ResponseEntity<?> pay(@Valid @RequestBody Payment payment) {
 
         log.info("Попытка совершения оплаты");
         boolean isPay = paymentService.pay(payment);

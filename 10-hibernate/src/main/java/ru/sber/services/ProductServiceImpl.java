@@ -14,22 +14,19 @@ import java.util.Optional;
  * Сервис для взаимодействия с товарами
  */
 @Service
-public class ProductServiceImplementation implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
 
     @Autowired
-    public ProductServiceImplementation(ProductRepository productRepository, CartRepository cartRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CartRepository cartRepository) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
     }
 
     @Override
     public long addNewProduct(Product product) {
-        if (product.getName() == null || product.getPrice() == null) {
-            return -1;
-        }
         return productRepository.save(product).getId();
     }
 
@@ -45,10 +42,6 @@ public class ProductServiceImplementation implements ProductService {
 
     @Override
     public boolean update(Product product) {
-        if (product.getId() == 0 || product.getName() == null
-                || product.getPrice() == null) {
-            return false;
-        }
         productRepository.save(product);
         return true;
     }

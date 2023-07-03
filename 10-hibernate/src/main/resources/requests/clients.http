@@ -32,7 +32,7 @@ Content-Type: application/json
 
 ###
 //Удаление пользователя
-DELETE localhost:8080/users/1
+DELETE localhost:8080/users/7
 
 ###
 //Попытка удалить несуществующего пользователя

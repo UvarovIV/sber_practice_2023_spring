@@ -12,23 +12,19 @@ import java.util.Optional;
  * Сервис для взаимодействия с пользователями
  */
 @Service
-public class UserServiceImplementation implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CartService cartService;
 
     @Autowired
-    public UserServiceImplementation(UserRepository userRepository, CartService cartService) {
+    public UserServiceImpl(UserRepository userRepository, CartService cartService) {
         this.userRepository = userRepository;
         this.cartService = cartService;
     }
 
     @Override
     public long signUp(User user) {
-        if (user.getName() == null || user.getEmail() == null
-                || user.getLogin() == null || user.getPassword() == null) {
-            return -1;
-        }
         return userRepository.save(user).getId();
     }
 

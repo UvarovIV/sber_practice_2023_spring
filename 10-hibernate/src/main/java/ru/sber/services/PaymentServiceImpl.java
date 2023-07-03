@@ -17,7 +17,7 @@ import java.util.List;
  * Сервис для взаимодействия с оплатой товаров
  */
 @Service
-public class PaymentServiceImplementation implements PaymentService {
+public class PaymentServiceImpl implements PaymentService {
 
     private final CartService cartService;
     private final UserService userService;
@@ -25,8 +25,8 @@ public class PaymentServiceImplementation implements PaymentService {
     private final BankAppProxy bankAppProxy;
 
     @Autowired
-    public PaymentServiceImplementation(CartService cartService, UserService userService,
-                                        ProductService productService, BankAppProxy bankAppProxy) {
+    public PaymentServiceImpl(CartService cartService, UserService userService,
+                              ProductService productService, BankAppProxy bankAppProxy) {
         this.cartService = cartService;
         this.userService = userService;
         this.productService = productService;

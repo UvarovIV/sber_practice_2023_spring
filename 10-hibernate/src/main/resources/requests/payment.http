@@ -48,3 +48,12 @@ Content-Type: application/json
   "cardNumber": 123456,
   "userId": 1
 }
+
+###
+//Запрос для платежа у которого заполнены не все поля
+POST localhost:8080/payment
+Content-Type: application/json
+
+{
+"userId": 1
+}

@@ -1,5 +1,6 @@
 package ru.sber.controllers;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +31,8 @@ public class ProductController {
      * @return Возвращает статус добавления товара
      */
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product) {
         long productId = productService.addNewProduct(product);
-        if (productId == -1) {
-            return ResponseEntity.badRequest().body("Не все значения заполнены");
-        }
         log.info("Добавление товара {}", product);
         return ResponseEntity.created(URI.create("products/" + productId)).build();
     }
@@ -83,12 +81,10 @@ public class ProductController {
      * @return Возвращает обновленный товар
      */
     @PutMapping
-    public ResponseEntity<?> updateProduct(@RequestBody Product product) {
-        if (productService.update(product)) {
-            log.info("Обновление информации о товаре");
-            return ResponseEntity.ok().body(product);
-        }
-        return ResponseEntity.badRequest().body("Заполнены не все значения");
+    public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product) {
+        productService.update(product);
+        log.info("Обновление информации о товаре");
+        return ResponseEntity.ok().body(product);
     }
 
     /**
