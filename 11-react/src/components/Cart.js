@@ -1,8 +1,10 @@
+import {useState} from "react";
+
 export const Cart = () => {
 
     const isEdit = true;
 
-    const productsInCarts = [
+    let productsInCarts = [
         {
             id: 1, name: "Кофе",
             price: 500, amount: 1,
@@ -15,40 +17,63 @@ export const Cart = () => {
         },
     ]
 
-    const drop = () => {
-        alert('Товар удален из корзины')
-    }
+    const [list, setList] = useState(productsInCarts);
+
+    const addItem = (item) => {
+        setList((prevList) => [...prevList, item]);
+    };
+
+    const removeItem = (id) => {
+        setList((prevList) => prevList.filter((item) => item.id !== id))
+    };
+
+    const handleInputChange = (e, productIndex) => {
+        const {value} = e.target;
+
+        if (parseInt(value, 10) > 0) {
+            setList((prevList) =>
+                prevList.map((product, index) => {
+                    if (index === productIndex) {
+                        return {
+                            ...product,
+                            amount: parseInt(value, 10),
+                        };
+                    }
+                    return product;
+                })
+            );
+        }
+    };
 
     return (
-        productsInCarts.map(product => {
-
-            return (
+        <div>
+            {list.map((product, index) => (
                 <div key={product.id} className={"cart-item"}>
                     <p>
-                        <img
-                            src={product.imageUrl}
-                            alt={'Фото ' + product.name}
-                        />
+                        <img src={product.imageUrl} alt={`Фото ${product.name}`}/>
                     </p>
                     <div className={"product-title-cart"}>{product.name}</div>
-                    <div className={"product-amount-cart"}>Количество:</div>
-                    <div className={"product-title-cart"}>{isEdit ? (
-                        <input type="number"
-                               defaultValue={product.amount}/>
-                    ) : (
-                        <div>{product.amount}</div>
-                    )
-                    }
+                    <div className={"product-amount-cart"}>
+                        Количество:
+                        {isEdit ? (
+                            <input
+                                type="number"
+                                value={product.amount}
+                                onChange={(e) => handleInputChange(e, index)}
+                            />
+                        ) : (
+                            <div>{product.amount}</div>
+                        )}
                     </div>
-                    <div className={"product-title-cart"}>{product.price * product.amount} руб.</div>
+                    <div className={"product-title-cart"}>
+                        {product.price * product.amount} руб.
+                    </div>
                     <p>
-                        <button onClick={drop}>Удалить</button>
+                        <button onClick={() => removeItem(product.id)}>Удалить</button>
                     </p>
-
                 </div>
-
-            );
-        })
+            ))}
+        </div>
     );
 }
 

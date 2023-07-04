@@ -1,26 +1,7 @@
-const products = [
-    {
-        id: 1, name: "Кофе",
-        price: 500, amount: 10,
-        imageUrl: 'https://i.imgur.com/kuJAwpO.jpg'
-    },
-    {
-        id: 2, name: "Чай",
-        price: 250, amount: 15,
-        imageUrl: 'https://basket-03.wb.ru/vol384/part38429/38429499/images/big/1.jpg'
-    },
-    {
-        id: 3, name: "Мохито",
-        price: 350, amount: 15,
-        imageUrl: 'https://i.imgur.com/pCKmRvE.jpg'
-    },
-]
-
-export const Products = () => {
-
+export const Products = ({products}) => {
     const addToCart = () => {
-        alert('Товар добавлен в корзину')
-    }
+        alert('Товар добавлен в корзину');
+    };
 
     return (
         products.map(product => {
@@ -40,6 +21,4 @@ export const Products = () => {
             );
         })
     );
-
-
 }

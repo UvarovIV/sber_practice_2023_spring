@@ -1,19 +1,13 @@
 export const Search = () => {
 
     const search = () => {
-        alert('Поиск работает')
+        alert('Поиск не работает')
     }
 
     return (
         <>
-            <input className="input-field" type="String"/>
-            <button onClick={search} style={
-                {
-                    width: 80,
-                    height: 34
-                }
-            }>Поиск</button>
-
+            <input className="search-field" type="String"/>
+            <button className="search-button" onClick={search}>Поиск</button>
         </>
     )
 }
