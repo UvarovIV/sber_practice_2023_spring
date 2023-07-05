@@ -35,7 +35,7 @@ const App = () => {
                 <Router>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
                         <Menu.Item key="1" onClick={() => handleMenuItemSelect("addProduct")}>
-                            <Link to="/products/add">Добавление, удаление и обновление товаров</Link>
+                            <Link to="/products/add">Добавление товаров</Link>
                         </Menu.Item>
                         <Menu.Item key="2" onClick={() => handleMenuItemSelect("editProduct")}>
                             <Link to="/products/edit">Изменение товара</Link>
