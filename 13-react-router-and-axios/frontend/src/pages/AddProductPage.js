@@ -46,7 +46,7 @@ const AddProduct = () => {
                 <Form.Item
                     label="URL изображения"
                     name="ImageUrl"
-                    rules={[{required: true, message: "Пожалуйста, введите количество товара"}]}
+                    rules={[{required: true, message: "Пожалуйста, введите Url изображения"}]}
                 >
                     <Input/>
                 </Form.Item>

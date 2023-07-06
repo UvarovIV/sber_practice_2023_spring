@@ -1,6 +1,6 @@
-import {Layout, Menu, theme} from "antd";
-import React, {useState} from "react";
-import {Link, BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import {Layout, Menu} from "antd";
+import React from "react";
+import {Link, Routes, Route} from "react-router-dom";
 import CartPage from "./pages/CartPage";
 import EditProductPage from "./pages/EditProductPage";
 import ProductListPage from "./pages/ProductListPage";
@@ -12,9 +12,7 @@ import LoginPage from "./pages/LoginPage";
 
 const {Content, Footer, Sider} = Layout;
 const App = () => {
-    const {
-        token: {},
-    } = theme.useToken();
+
 
     return (
         <Layout>
@@ -28,7 +26,7 @@ const App = () => {
                         <Link to="/products/edit">Изменение товара</Link>
                     </Menu.Item>
                     <Menu.Item key="3">
-                        <Link to="/products">Список товаров</Link>
+                        <Link to="/">Список товаров</Link>
                     </Menu.Item>
                     <Menu.Item key="4">
                         <Link to="/cart">Корзина</Link>
@@ -47,7 +45,7 @@ const App = () => {
             <Layout>
                 <Content style={{margin: "24px 16px 0",}}>
                     <Routes>
-                        <Route path="/products" index element={<ProductListPage/>}/>
+                        <Route index element={<ProductListPage/>}/>
                         <Route path="/products/add" element={<AddProductPage/>}/>
                         <Route path="/products/edit" element={<EditProductPage/>}/>
                         <Route path="/cart" element={<CartPage/>}/>

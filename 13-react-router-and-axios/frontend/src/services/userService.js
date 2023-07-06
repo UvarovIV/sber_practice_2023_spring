@@ -22,10 +22,10 @@ const getUser = (id, dispatch) => {
 
 };
 
-const createUser = (user, dispatch) => {
-    return axios.post(API_URL, user).then(
+const authorize = (loginData, dispatch) => {
+    return axios.get(API_URL, { params: loginData }).then(
         (response) => {
-            getUser(dispatch)
+            getUser(response.data, dispatch)
         },
         (error) => {
             const _content = (error.response && error.response.data) ||
@@ -33,13 +33,15 @@ const createUser = (user, dispatch) => {
                 error.toString();
 
             console.error(_content)
+
+            dispatch(set([]));
         });
-};
+}
 
 
 const userService = {
     getUser,
-    createUser,
+    authorize,
 };
 
 export default userService

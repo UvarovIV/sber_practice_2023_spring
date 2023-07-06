@@ -115,6 +115,7 @@ public class PaymentServiceImpl implements PaymentService {
             updatedProduct.setName(product.getName());
             updatedProduct.setPrice(product.getPrice());
             updatedProduct.setAmount(productService.findById(product.getId()).get().getAmount() - product.getAmount());
+            updatedProduct.setImageUrl(product.getImageUrl());
             productService.update(updatedProduct);
         }
 

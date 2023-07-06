@@ -19,7 +19,6 @@ const addToCart = (userId, productId, dispatch) => {
 };
 
 const updateAmount = (userId, productId, amount, dispatch) => {
-
     return axios.put(`${API_URL}/${userId}/product/${productId}`, amount).then(
         () => {
             UserService.getUser(userId, dispatch)

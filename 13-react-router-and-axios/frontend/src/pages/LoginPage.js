@@ -1,10 +1,18 @@
 import {Button, Card, Form, Input} from "antd";
 import React from "react";
 import Title from "antd/es/skeleton/Title";
+import UserService from "../services/userService";
+import {useDispatch} from "react-redux";
 
 const LoginPage = () => {
+
+    const dispatch = useDispatch();
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+        const loginData = {
+            login: values.login,
+            password: values.password
+        };
+        UserService.authorize(loginData, dispatch)
     };
 
     return (

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Card, Button, Input } from "antd";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {Button, Card, Col, Input, Row} from "antd";
 import ProductService from "../services/productService";
 import CartService from "../services/cartService";
 
-const { Meta } = Card;
+const {Meta} = Card;
 
 const ProductList = () => {
     const userId = useSelector((state) => state.users.user.id);
@@ -53,15 +53,15 @@ const ProductList = () => {
                 placeholder="Поиск по названию"
                 value={searchValue}
                 onChange={handleSearch}
-                style={{ marginBottom: 16 }}
+                style={{marginBottom: 16}}
             />
             <Row gutter={[16, 16]}>
                 {filteredProducts.map((product) => (
                     <Col lg={4} key={product.id}>
                         <Card
                             size={"small"}
-                            cover={<img alt={product.name} src={product.imageUrl} />}
-                            style={{ marginBottom: 40, flex: "auto" }}
+                            cover={<img alt={product.name} src={product.imageUrl}/>}
+                            style={{marginBottom: 40, flex: "auto"}}
                             actions={[
                                 <Button
                                     size="small"
@@ -73,7 +73,7 @@ const ProductList = () => {
                         >
                             <Meta
                                 title={product.name}
-                                description={`Цена: $${product.price} руб. | Количество: ${product.amount} шт.`}
+                                description={`Цена: ${product.price} руб. | Количество: ${product.amount} шт.`}
                             />
                         </Card>
                     </Col>

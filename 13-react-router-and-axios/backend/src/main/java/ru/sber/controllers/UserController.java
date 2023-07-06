@@ -85,11 +85,12 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getUserByLoginAndPassword(@RequestBody User user) {
+    public ResponseEntity<?> getUserByLoginAndPassword(@RequestParam("login") String login,
+                                                       @RequestParam("password") String password) {
 
         log.info("Проверяем есть ли пользователь с переданными логином и паролем");
 
-        Optional<User> checkUser = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
+        Optional<User> checkUser = userService.findByLoginAndPassword(login, password);
 
         if (checkUser.isPresent()) {
             long id = checkUser.get().getId();

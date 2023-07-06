@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
-import {List, Button, InputNumber} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {Button, InputNumber, List} from "antd";
 import CartService from "../services/cartService";
 import UserService from "../services/userService";
-import paymentService from "../services/paymentService";
 import PaymentService from "../services/paymentService";
 
 const Cart = () => {

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Form, Input, Button} from "antd";
+import {Button, Form, Input} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import ProductService from "../services/productService";
 
@@ -30,13 +30,11 @@ const EditProduct = () => {
             form.resetFields();
 
         });
-        console.log(products)
     };
 
     const handleDeleteProduct = (product) => {
         ProductService.deleteProduct(product.id, dispatch);
         form.resetFields();
-        console.log(products)
     };
 
     return (
