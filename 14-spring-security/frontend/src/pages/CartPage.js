@@ -34,6 +34,7 @@ const CartPage = () => {
     const handlePayment = () => {
         const payment = {cardNumber: 123456, userId: userId}
         PaymentService.pay(payment, dispatch)
+        cartService.getCart(userId, dispatch)
     }
 
     const [sortType, setSortType] = useState("name"); // Установите начальное значение сортировки по имени

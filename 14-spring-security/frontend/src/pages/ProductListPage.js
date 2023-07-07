@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Card, Col, Input, Row} from "antd";
+import {Button, Card, Col, Input, message, Row} from "antd";
 import ProductService from "../services/productService";
 import CartService from "../services/cartService";
 
@@ -10,6 +10,7 @@ const ProductList = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const products = useSelector((state) => state.products.products);
     const dispatch = useDispatch();
+    const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
     useEffect(() => {
         ProductService.getProducts(dispatch);
@@ -19,7 +20,12 @@ const ProductList = () => {
     const [sortedProducts, setSortedProducts] = useState([]);
 
     const handleAddToCart = (product) => {
-        CartService.addToCart(user.id, product.id, dispatch);
+        if (isLoggedIn) {
+            CartService.addToCart(user.id, product.id, dispatch);
+        } else {
+            message.error("Для добавления товара в корзину вы должны быть авторизованы")
+        }
+
     };
 
     const handleSearch = (e) => {
@@ -27,9 +33,13 @@ const ProductList = () => {
     };
 
     const handleAddRandomToCart = () => {
-        const randomProductIndex = Math.floor(Math.random() * products.length);
-        const randomProduct = products[randomProductIndex];
-        CartService.addToCart(user.id, randomProduct.id, dispatch);
+        if (isLoggedIn) {
+            const randomProductIndex = Math.floor(Math.random() * products.length);
+            const randomProduct = products[randomProductIndex];
+            CartService.addToCart(user.id, randomProduct.id, dispatch);
+        } else {
+            message.error("Для добавления товара в корзину вы должны быть авторизованы")
+        }
     };
 
     useEffect(() => {

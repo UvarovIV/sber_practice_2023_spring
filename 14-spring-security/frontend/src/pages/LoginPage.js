@@ -1,5 +1,5 @@
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Form, Input} from 'antd';
+import {Button, Form, Input, message} from 'antd';
 import {login} from "../slices/authSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
@@ -14,6 +14,12 @@ const LoginPage = () => {
             console.log(user)
             dispatch(login(user))
             navigate("/")
+        }, (error) => {
+            const _content = (error.response && error.response.data)
+            error.message ||
+            error.toString();
+            console.log(_content);
+            message.error("Неправильный логин или пароль");
         })
     };
     return (

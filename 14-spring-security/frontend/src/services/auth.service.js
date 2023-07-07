@@ -8,7 +8,7 @@ const register = (registration) => {
         username,
         email,
         password,
-    });
+    },);
 };
 
 const login = (login) => {
@@ -24,7 +24,6 @@ const login = (login) => {
             if (response.data.accessToken) {
                 localStorage.setItem("user", JSON.stringify(response.data));
             }
-
             return response.data;
         });
 };

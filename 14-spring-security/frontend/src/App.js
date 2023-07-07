@@ -9,13 +9,16 @@ import AddProductPage from "./pages/AddProductPage";
 import {NotFoundPage} from "./pages/NotFoundPage";
 import RegisterPage from "./pages/RegistrationPage";
 import LoginPage from "./pages/LoginPage";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import authService from "./services/auth.service";
+import {logout} from "./slices/authSlice";
 
 const {Content, Footer, Sider, Header} = Layout;
 const App = () => {
     const [selectedMenuKey, setSelectedMenuKey] = useState("2"); // Состояние для хранения выбранного пункта меню
+
+    const dispatch = useDispatch();
 
     const location = useLocation();
 
@@ -27,6 +30,7 @@ const App = () => {
     const user = useSelector((state) => state.auth.user);
 
     const handleLogOut = () => {
+        dispatch(logout(user))
         authService.logout()
     }
 
@@ -68,17 +72,24 @@ const App = () => {
             <Layout>
                 <Sider>
                     <div className="demo-logo-vertical"/>
-                    <Menu theme="dark" mode="inline" selectedKeys={[selectedMenuKey]}>
-                        {location.pathname === "/" && [ // Пункты меню для страницы "Товары"
-                            <Menu.Item key="1">
-                                <Link to="/products/add">Добавление товаров</Link>
-                            </Menu.Item>,
-                            <Menu.Item key="2">
-                                <Link to="/products/edit">Изменение товара</Link>
-                            </Menu.Item>,
-                            <Menu.Item key="3">
-                                <Link to="/">Список товаров</Link>
-                            </Menu.Item>,
+                    <Menu theme="dark" mode="inline" >
+                        {(location.pathname === "/" || location.pathname === "/products/add" || location.pathname === "/products/edit") && [ // Пункты меню для страницы "Товары"
+                            <>
+                                <Menu.Item key="1">
+                                    <Link to="/">Список товаров</Link>
+                                </Menu.Item>
+                                {isLoggedIn && user.roles.includes("ROLE_ADMIN") && user !== null ? (
+                                    <>
+                                        <Menu.Item key="2">
+                                            <Link to="/products/add">Добавление товаров</Link>
+                                        </Menu.Item>
+                                        <Menu.Item key="3">
+                                            <Link to="/products/edit">Изменение товара</Link>
+                                        </Menu.Item>
+                                    </>) : (<></>)
+                                }
+
+                            </>
                         ]}
                         {location.pathname === "/cart" && ( // Пункты меню для страницы "Корзина"
                             <Menu.Item key="4">
